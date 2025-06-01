@@ -1,0 +1,39 @@
+<!-- public/index.html -->
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <title>QR Code Generator</title>
+  </head>
+  <body>
+    <h1>QR Code Generator</h1>
+    <input type="text" id="urlInput" placeholder="Enter URL" />
+    <button onclick="generateQRCode()">Generate QR</button>
+
+    <p id="message"></p>
+    <img id="qrImage" style="margin-top: 20px" />
+
+    <script>
+      async function generateQRCode() {
+        const url = document.getElementById("urlInput").value;
+
+        const response = await fetch("http://localhost:3000/generate", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({ url }),
+        });
+
+        const result = await response.json();
+
+        if (result.qrPath) {
+          document.getElementById("message").innerText = result.message;
+          document.getElementById("qrImage").src = result.qrPath;
+        } else {
+          document.getElementById("message").innerText = result.error;
+        }
+      }
+    </script>
+  </body>
+</html>
